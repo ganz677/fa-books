@@ -1,0 +1,45 @@
+[tool.black]
+line-length = 88
+skip-string-normalization = false
+
+[tool.isort]
+profile = "black"
+line_length = 88
+combine_as_imports = true
+include_trailing_comma = true
+multi_line_output = 3
+known_first_party = ["app"]
+skip = ["migrations", ".venv", "__pycache__"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+src = ["app", "tests"]
+exclude = ["migrations", ".venv", "__pycache__"]
+
+lint.select = [
+  "F",
+  "E",
+  "W",
+  "B",
+  "I",
+  "C90",
+  "UP",
+  "SIM",
+  "RUF",
+]
+
+lint.ignore = [
+  "E501",
+]
+
+[tool.mypy]
+python_version = "3.11"
+check_untyped_defs = true
+strict = true
+ignore_missing_imports = true
+plugins = ["pydantic.mypy"]
+
+[tool.pydantic-mypy]
+init_typed = true
+warn_required_dynamic_aliases = true
