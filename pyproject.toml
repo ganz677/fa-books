@@ -38,7 +38,7 @@ python_version = "3.11"
 check_untyped_defs = true
 strict = true
 ignore_missing_imports = true
-plugins = ["pydantic.mypy"]
+
 
 [tool.pydantic-mypy]
 init_typed = true
