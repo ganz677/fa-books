@@ -10,6 +10,7 @@ from .crud import (
     get_author_id,
     get_authors,
     update_author,
+    add_book_to_author,
 )
 from .schemas import AuthorCreate, AuthorRead, AuthorUpdate
 
@@ -51,3 +52,17 @@ async def change_author_info(
     db: AsyncSession = Depends(db_helper.session_getter),
 ):
     return await update_author(db=db, author_id=author_id, update_data=update_data)
+
+
+
+@router.post('/add-book/{book_id}/to-author/{author_id}')
+async def add_any_book_to_author(
+    book_id: int,
+    author_id: int,
+    db: AsyncSession = Depends(db_helper.session_getter)
+):
+    return await add_book_to_author(
+        db=db,
+        book_id=book_id,
+        author_id=author_id,
+    )

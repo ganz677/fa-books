@@ -1,8 +1,11 @@
+from typing import List
+
 from datetime import date
 from typing import Optional
 
 from pydantic import BaseModel
 
+from api.v1.books.schemas import BookReadForAuthor
 
 class AuthorCreate(BaseModel):
     full_name: str
@@ -21,6 +24,7 @@ class AuthorRead(BaseModel):
     full_name: str
     biography: str
     birthdate: date
+    books: List[BookReadForAuthor]
 
     class Config:
         from_attributes = True

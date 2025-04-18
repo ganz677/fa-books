@@ -1,8 +1,9 @@
-from core.models import Book
 from fastapi import HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
 
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from core.models import Book
 from .schemas import BookCreate, BookUpdate
 
 
@@ -65,17 +66,13 @@ async def update_book(
     book = result.scalar_one_or_none()
 
     if not book:
-        raise HTTPException(status_code=404, detail=f"author id not found")
+        raise HTTPException(status_code=404, detail="Book not found")
 
-    for field, value in update_data.model_dump().items():
+    for field, value in update_data.model_dump(exclude_unset=True).items():
         setattr(book, field, value)
 
     await db.commit()
     await db.refresh(book)
 
-    return {
-        "message": "success",
-        "title": book.title,
-        "description": book.description,
-        "num_pages": book.num_pages,
-    }
+    return book
+

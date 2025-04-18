@@ -38,10 +38,11 @@ async def remove_any_book(
     return await delete_book(db=db, book_id=book_id)
 
 
-@router.patch("/change/{book_id}")
+@router.patch("/change/{book_id}", response_model=BookRead)
 async def change_book_info(
     book_id: int,
     update_data: BookUpdate,
     db: AsyncSession = Depends(db_helper.session_getter),
 ):
     return await update_book(db=db, book_id=book_id, update_data=update_data)
+
