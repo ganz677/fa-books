@@ -1,9 +1,5 @@
-import logging
-from typing import Awaitable, Callable
-
 from api import router as api_router
-from core.settings import settings
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
 

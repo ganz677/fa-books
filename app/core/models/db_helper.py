@@ -40,7 +40,7 @@ class DataBaseHelper:
 
 
 db_helper = DataBaseHelper(
-    url=str(settings.db_url),
+    url=str(settings.db.url),
     echo=settings.db.echo,
     echo_pool=settings.db.echo_pool,
     pool_size=settings.db.pool_size,
