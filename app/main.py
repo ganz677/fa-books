@@ -7,6 +7,12 @@ app = FastAPI(default_response_class=ORJSONResponse)
 
 app.include_router(api_router)
 
+@app.get('/')
+async def greetings():
+    return {
+        'message': 'hello!'
+    }
+
 
 if __name__ == "__main__":
     import uvicorn

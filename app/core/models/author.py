@@ -32,3 +32,7 @@ class Author(Base):
         secondary=book_author_association_table,
         back_populates="authors",
     )
+    
+    def __repr__(self):
+        return f"<Author id={self.id} full_name='{self.full_name}'>"
+

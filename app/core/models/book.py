@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey, Integer, String, Text
+from sqlalchemy import Integer, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .author_book_association import book_author_association_table
@@ -16,17 +16,24 @@ class Book(Base):
         autoincrement=True,
     )
     title: Mapped[str] = mapped_column(
-        Text(),
         nullable=False,
     )
     description: Mapped[str] = mapped_column(
-        Text(),
+        Text,
+        nullable=True,
     )
+    
     num_pages: Mapped[int] = mapped_column(
-        Integer(),
+        Integer,
     )
 
     authors: Mapped[list["Author"]] = relationship(
         secondary=book_author_association_table,
         back_populates="books",
     )
+    
+    def __repr__(self):
+        return f'<Book id = {self.id}, title = {self.title}>'
+
+
+        
