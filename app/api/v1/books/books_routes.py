@@ -1,48 +1,49 @@
-from typing import List
+from typing import List, Annotated
 
-from core.models import db_helper
 from fastapi import APIRouter, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from .crud import create_book, delete_book, get_book_id, get_books, update_book
+from .crud import BooksCRUD
+from .dependencies import books_crud
 from .schemas import BookCreate, BookRead, BookUpdate
 
 router = APIRouter(prefix="/books", tags=["Books"])
 
 
+
 @router.get("/", response_model=List[BookRead])
-async def get_all_books(db: AsyncSession = Depends(db_helper.session_getter)):
-    return await get_books(db=db)
+async def get_all_books(books_crud: Annotated[BooksCRUD, Depends(books_crud)]):
+    return await books_crud.get_books()
 
 
 @router.get("/{book_id}", response_model=BookRead)
 async def get_book_by_id(
     book_id: int,
-    db: AsyncSession = Depends(db_helper.session_getter),
+    books_crud: Annotated[BooksCRUD, Depends(books_crud)]
 ):
-    return await get_book_id(book_id=book_id, db=db)
+    return await books_crud.get_book_id(book_id)
 
 
 @router.post("/new", response_model=BookCreate, status_code=201)
 async def add_new_author(
     book: BookCreate,
-    db: AsyncSession = Depends(db_helper.session_getter),
+    books_crud: Annotated[BooksCRUD, Depends(books_crud)]
 ):
-    return await create_book(book_info=book, db=db)
+    return await books_crud.create_book(book_info=book)
 
 
 @router.delete("/delete")
 async def remove_any_book(
-    book_id: int, db: AsyncSession = Depends(db_helper.session_getter)
+    book_id: int,
+    books_crud: Annotated[BooksCRUD, Depends(books_crud)]
 ):
-    return await delete_book(db=db, book_id=book_id)
+    return await books_crud.delete_book(book_id=book_id)
 
 
 @router.patch("/change/{book_id}", response_model=BookRead)
 async def change_book_info(
     book_id: int,
     update_data: BookUpdate,
-    db: AsyncSession = Depends(db_helper.session_getter),
+    books_crud: Annotated[BooksCRUD, Depends(books_crud)]
 ):
-    return await update_book(db=db, book_id=book_id, update_data=update_data)
+    return await books_crud.update_book(book_id=book_id, update_data=update_data)
 

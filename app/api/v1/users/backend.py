@@ -6,7 +6,7 @@ from fastapi_users.authentication import AuthenticationBackend, BearerTransport
 from fastapi_users.authentication.strategy.db import DatabaseStrategy
 from fastapi import Depends
 
-from ..dependencies.access_tokens import get_access_tokens_db
+from .dependencies.access_tokens import get_access_tokens_db
 from core.settings import settings
 from core.models import AccessToken
 
