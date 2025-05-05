@@ -9,7 +9,6 @@ BASE_DIR =Path(__file__).parent.parent
 class AuthJWT(BaseModel):
     algorithm: str = 'RS256' 
     lifetime_seconds: int = 3600
-    secret_key: str
     private_key_path: Path = BASE_DIR / 'certs' / 'jwt-private.pem'
     public_key_path: Path = BASE_DIR / 'certs' / 'jwt-public.pem'
 
@@ -29,7 +28,7 @@ class Settings(BaseSettings):
         env_nested_delimiter="__" 
     )
     db: DbSettings
-    jwt_token: AuthJWT
+    auth_jwt: AuthJWT = AuthJWT()
 
 settings = Settings()
 

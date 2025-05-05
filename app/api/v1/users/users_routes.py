@@ -1,40 +1,31 @@
-from fastapi import APIRouter
-from fastapi_users import FastAPIUsers
+from typing import Annotated
+
+from fastapi import APIRouter, Depends
+
+from .crud import UserCRUD
+from .schemas import UserCreate, AuthResponse, UserLogin
+from .dependencies import user_crud
 
 
-from core.models import User
-from .backend import auth_backend
-from .manager import get_user_manager
-from .schemas import UserCreate, UserRead
+router = APIRouter(prefix="/users", tags=["Users"])
 
 
-fastapi_users = FastAPIUsers[User, str](
-    get_user_manager,
-    [auth_backend],
-)
 
-router = APIRouter()
+@router.post('/register', response_model=AuthResponse)
+async def create_new_user(
+    user_creds: UserCreate,
+    user_dep: Annotated[UserCRUD, Depends(user_crud)]
+):
+    return await user_dep.create_user(user_creds=user_creds)
+    
+    
+@router.post('/login')
+async def user_login(
+    user_creds: UserLogin,
+    user_dep: Annotated[UserCRUD, Depends(user_crud)]
+):
+    return await user_dep.user_login(
+        username=user_creds.username,
+        password=user_creds.password,
+    )
 
-router.include_router(
-    fastapi_users.get_auth_router(auth_backend),
-    prefix="/auth/jwt",
-    tags=["auth"]
-)
-
-router.include_router(
-    fastapi_users.get_register_router(UserRead, UserCreate),
-    prefix="/auth",
-    tags=["auth"]
-)
-
-router.include_router(
-    fastapi_users.get_reset_password_router(),
-    prefix="/auth",
-    tags=["auth"]
-)
-
-router.include_router(
-    fastapi_users.get_verify_router(UserRead),
-    prefix="/auth",
-    tags=["auth"]
-)

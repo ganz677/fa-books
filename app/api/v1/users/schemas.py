@@ -1,13 +1,28 @@
-from uuid import UUID
-
-from pydantic import EmailStr
-
-from fastapi_users import schemas
+from pydantic import  BaseModel, EmailStr
 
 
-class UserRead(schemas.BaseUser[UUID]):
-    pass
+class UserRead(BaseModel):
+    id: int
+    email: EmailStr | None
+    username: str
+    active: bool
+
+    class Config:
+        from_attributes = True
+        
+        
+class UserCreate(BaseModel):
+    email: EmailStr | None
+    username: str
+    password: str
+    
+    
+class UserLogin(BaseModel):
+    username: str
+    password: str
 
 
-class UserCreate(schemas.BaseUserCreate):
-    pass
+
+class AuthResponse(BaseModel):
+    access_token: str
+    token_type: str = 'bearer'
