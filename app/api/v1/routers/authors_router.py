@@ -3,9 +3,9 @@ from typing import List, Annotated
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .crud import AuthorCRUD
-from .dependencies import authors_crud
-from .schemas import AuthorCreate, AuthorRead, AuthorUpdate
+from api.v1.cruds.author_crud import AuthorCRUD
+from api.v1.dependencies.author_dependencies import authors_crud
+from api.v1.schemas.author_schemas import AuthorCreate, AuthorRead, AuthorUpdate
 
 router = APIRouter(prefix="/authors", tags=["Authors"])
 

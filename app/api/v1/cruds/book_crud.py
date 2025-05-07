@@ -5,8 +5,8 @@ from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 
-from core.models import Book, db_helper
-from .schemas import BookCreate, BookUpdate
+from core.models import Book
+from api.v1.schemas.book_schemas import BookCreate, BookUpdate
 
 
 if TYPE_CHECKING:

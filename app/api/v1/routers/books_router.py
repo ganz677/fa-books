@@ -2,9 +2,9 @@ from typing import List, Annotated
 
 from fastapi import APIRouter, Depends
 
-from .crud import BooksCRUD
-from .dependencies import books_crud
-from .schemas import BookCreate, BookRead, BookUpdate
+from api.v1.cruds.book_crud import BooksCRUD
+from api.v1.dependencies.books_dependencies import books_crud
+from api.v1.schemas.book_schemas import BookCreate, BookRead, BookUpdate
 
 router = APIRouter(prefix="/books", tags=["Books"])
 

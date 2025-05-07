@@ -7,7 +7,7 @@ from sqlalchemy.orm import selectinload
 from sqlalchemy.exc import SQLAlchemyError
 
 from core.models import Author, Book
-from .schemas import AuthorCreate, AuthorUpdate
+from api.v1.schemas.author_schemas import AuthorCreate, AuthorUpdate
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession

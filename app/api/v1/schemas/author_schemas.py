@@ -5,7 +5,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from api.v1.books.schemas import BookReadForAuthor
+from api.v1.schemas.book_schemas import BookReadForAuthor
 
 class AuthorCreate(BaseModel):
     full_name: str
