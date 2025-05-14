@@ -7,10 +7,10 @@ BASE_DIR =Path(__file__).parent.parent
 
 
 class AuthJWT(BaseModel):
-    algorithm: str = 'RS256' 
-    access_token_lifetime_seconds: int = 3600
-    private_key_path: Path = BASE_DIR / 'certs' / 'jwt-private.pem'
-    public_key_path: Path = BASE_DIR / 'certs' / 'jwt-public.pem'
+    algorithm: str = 'RS256'
+    access_token_lifetime_seconds: int = 360
+    private_key_path: Path = BASE_DIR / 'certs' / 'private.pem'
+    public_key_path: Path = BASE_DIR / 'certs' / 'public.pem'
 
 class DbSettings(BaseModel):
     url: PostgresDsn
@@ -21,14 +21,13 @@ class DbSettings(BaseModel):
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env", 
+        env_file=".env",
         env_file_encoding="utf-8",
         env_prefix='APP__',
         case_sensitive=False,
-        env_nested_delimiter="__" 
+        env_nested_delimiter="__"
     )
     db: DbSettings
     auth_jwt: AuthJWT = AuthJWT()
 
 settings = Settings()
-

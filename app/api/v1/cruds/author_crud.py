@@ -1,146 +1,59 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Annotated
 
-from fastapi import HTTPException
-
-from sqlalchemy import select
-from sqlalchemy.orm import selectinload
-from sqlalchemy.exc import SQLAlchemyError
-
-from core.models import Author, Book
+from api.v1.dals.author_dals import AuthorDAL
 from api.v1.schemas.author_schemas import AuthorCreate, AuthorUpdate
+from auth.auth_user_validation import get_current_user
+from core.models import User
+from fastapi import Depends
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
 
 
-
-class AuthorCRUD:
-    def __init__(self, db: 'AsyncSession'):
-        self.db = db
-
-    async def get_authors(self):
-        try:
-            result = await self.db.execute(select(Author).options(selectinload(Author.books)))
-            return result.scalars().all()
-        except SQLAlchemyError as e:
-            raise HTTPException(
-                status_code=500,
-                detail=f'Database error: {e}'
-            )
-
-    async def get_author_id(self, author_id: int):
-        try:  
-            result = await self.db.execute(
-                select(Author).options(selectinload(Author.books)).filter(Author.id == author_id)
-                )
-
-            author = result.scalar_one_or_none()
-            if not author:
-                raise HTTPException(status_code=404, detail="Author not found")
-            return author
-        except SQLAlchemyError as e:
-            raise HTTPException(
-                status_code=500,
-                detail=f'Database error: {e}'
-            )
-            
-
-    async def create_author(self, author_creds: AuthorCreate):
-        try:
-            existing_author = await self.db.execute(
-                select(Author).filter(Author.full_name == author_creds.full_name)
-            )
-            if existing_author.scalar_one_or_none():
-                raise HTTPException(status_code=400, detail="Author already exists")
-
-            author = Author(**author_creds.model_dump())
-
-            self.db.add(author)
-            await self.db.commit()
-            await self.db.refresh(author)
-
-            return author
-        except SQLAlchemyError as e:
-            raise HTTPException(
-                status_code=500,
-                detail=f'Database error: {e}'
-            )
-
-    async def delete_author(self, author_id: int):
-        try:
-            author = await self.db.execute(select(Author).where(Author.id == author_id))
-            result = author.scalar_one_or_none()
-            if result:
-                await self.db.delete(result)
-                await self.db.commit()
-            else:
-                raise HTTPException(status_code=404, detail=f"author id not found")
-            return {"message": f"author with id: {author_id} deleted successfully"}
-        except SQLAlchemyError as e:
-            raise HTTPException(
-                status_code=500,
-                detail=f'Database error: {e}'
-            )
-
-    async def update_author(self, author_id: int, update_data: AuthorUpdate):
-        try:
-            result = await self.db.execute(select(Author).where(Author.id == author_id))
-            author = result.scalar_one_or_none()
-
-            if not author:
-                raise HTTPException(status_code=404, detail=f"author id not found")
-
-            for field, value in update_data.model_dump(exclude_unset=True).items():
-                setattr(author, field, value)
-
-            await self.db.commit()
-            await self.db.refresh(author)
-
-            return {
-                "message": "success",
-                "full_name": author.full_name,
-                "biography": author.biography,
-                "birthdate": author.birthdate,
-            }
-        except SQLAlchemyError as e:
-            raise HTTPException(
-                status_code=500,
-                detail=f'Database error: {e}'
-            )
+async def get_authors_from_db(
+    db: 'AsyncSession',
+):
+    dal = AuthorDAL(db=db)
+    return await dal.get_authors()
 
 
-    async def add_book_to_author(
-        self,
-        book_id: int,
-        author_id: int,
-    ):
-        try:
-            result = await self.db.execute(
-                select(Author)
-                .where(Author.id == author_id)
-                .options(selectinload(Author.books))
-            )
-            author = result.scalar_one_or_none()
-            if not author:
-                raise HTTPException(status_code=404, detail="Author not found")
+async def get_authors_by_id_from_db(
+    author_id: int,
+    db: 'AsyncSession',
+):
+    dal = AuthorDAL(db=db)
+    return await dal.get_author_id(author_id=author_id)
 
-            result = await self.db.execute(select(Book).where(Book.id == book_id))
-            book = result.scalar_one_or_none()
-            if not book:
-                raise HTTPException(status_code=404, detail="Book not found")
+async def create_new_author(
+    author_creds: AuthorCreate,
+    db: 'AsyncSession'
+):
+    dal = AuthorDAL(db=db)
+    return await dal.create_author(author_creds=author_creds)
 
-            if book in author.books:
-                raise HTTPException(status_code=400, detail="Book already added to author")
 
-            author.books.append(book)
-            await self.db.commit()
-            await self.db.refresh(author)
-            return {
-                'message': 'complete'
-            }
-        except SQLAlchemyError as e:
-            raise HTTPException(
-                status_code=500,
-                detail=f'Database error: {e}'
-            )
-        
+async def delete_author_by_id(
+    author_id: int,
+    db: 'AsyncSession',
+):
+    dal = AuthorDAL(db=db)
+    return await dal.delete_author(author_id=author_id)
+
+
+async def update_author_data(
+    author_id: int,
+    update_creds: AuthorUpdate,
+    db: 'AsyncSession'
+):
+    dal = AuthorDAL(db=db)
+    return await dal.update_author(author_id=author_id, update_data=update_creds)
+
+
+async def add_book_to_author(
+    book_id: int,
+    author_id: int,
+    db: 'AsyncSession'
+):
+    dal = AuthorDAL(db=db)
+    return await dal.add_book_to_author(author_id=author_id, book_id=book_id)
+
