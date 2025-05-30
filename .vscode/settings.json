@@ -1,5 +1,9 @@
 {
     "cSpell.words": [
-        "creds"
+        "aiosmtplib",
+        "creds",
+        "dals",
+        "dotenv",
+        "onupdate"
     ]
 }

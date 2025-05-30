@@ -1,6 +1,6 @@
 from sqlalchemy import MetaData
-from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
-from utils.case_converter import camel_to_snake_case
+from sqlalchemy.orm import DeclarativeBase, declared_attr
+from app.utils.case_converter import camel_to_snake_case
 
 
 class Base(DeclarativeBase):
