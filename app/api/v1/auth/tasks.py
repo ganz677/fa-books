@@ -1,8 +1,8 @@
 import smtplib
-
-from celery import shared_task
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
+from celery import shared_task
 from starlette.templating import Jinja2Templates
 
 from app.core.settings import settings
@@ -14,7 +14,7 @@ def send_confirmation_email(
     token: str,
 ) -> None:
     confirmation_url = f'http://127.0.0.1:8000/api/v1/auth/register_confirm?token={token}'
-    
+
     templates = Jinja2Templates(directory=settings.front.templates_dir)
     template = templates.get_template(name="confirmation_email.html")
     html_content = template.render(confirmation_url=confirmation_url)

@@ -3,10 +3,10 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
 
-from .schemas import AuthUser, UserReturnData, UserVerifySchema
-from .services import UserService
 from app.api.v1.depends import get_current_user
 
+from .schemas import AuthUser, UserReturnData, UserVerifySchema
+from .services import UserService
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -35,8 +35,8 @@ async def confirm_registration(
     return {
         'message': 'Email successfully confirmed!'
     }
-    
-    
+
+
 @router.post(
     path='/login',
     status_code=status.HTTP_200_OK,
@@ -46,7 +46,7 @@ async def login(
     service: UserService = Depends(UserService),
 ) -> JSONResponse:
     return await service.login_user(user=user)
-    
+
 
 @router.get(
     path='/logout',
@@ -57,8 +57,8 @@ async def logout(
     service: UserService = Depends(UserService),
 ) -> JSONResponse:
     return await service.logout_user(user=user)
-    
-    
+
+
 @router.get(
     path='/get_user',
     status_code=status.HTTP_200_OK,

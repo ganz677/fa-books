@@ -1,8 +1,8 @@
 import uvicorn
-
-from app.api import router as api_router
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
+
+from app.api import router as api_router
 
 app = FastAPI(default_response_class=ORJSONResponse)
 
@@ -13,4 +13,3 @@ async def greetings():
     return {
         'message': 'hello!'
     }
-

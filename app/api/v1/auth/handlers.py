@@ -1,14 +1,14 @@
 import datetime
 import uuid
 
-
 import bcrypt
 import jwt
-
 from fastapi import HTTPException, status
 
-from .named_tuples import CreateTokenTuple
 from app.core.settings import settings
+
+from .named_tuples import CreateTokenTuple
+
 
 class AuthHandler:
     def __init__(self):
@@ -16,7 +16,7 @@ class AuthHandler:
         self.public_key: str = settings.auth_jwt.public_key_path.read_text()
         self.algorithm: str = settings.auth_jwt.algorithm
         self.expire_seconds: int = settings.auth_jwt.access_token_lifetime_seconds
-        
+
     def hash_password(
         self,
         password: str,
@@ -31,22 +31,22 @@ class AuthHandler:
         hashed_password: str
     ) -> bool:
         return bcrypt.checkpw(raw_password.encode(), hashed_password.encode())
-    
+
     async def create_access_token(
         self,
         user_id: uuid.UUID,
     ) -> CreateTokenTuple:
         expire = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(seconds=settings.auth_jwt.access_token_lifetime_seconds)
         session_id = str(uuid.uuid4())
-        
+
         payload = {
             'exp': expire,
             'session_id': session_id,
             'user_id': str(user_id),
         }
-        
+
         encoded_jwt = jwt.encode(payload=payload, key=self.private_key, algorithm=self.algorithm)
-        
+
         return CreateTokenTuple(encoded_jwt=encoded_jwt, session_id=session_id)
 
 
@@ -54,7 +54,7 @@ class AuthHandler:
         self,
         token: str | bytes,
     ) -> dict:
-        try: 
+        try:
             decoded = jwt.decode(
                 jwt=token,
                 key=self.public_key,

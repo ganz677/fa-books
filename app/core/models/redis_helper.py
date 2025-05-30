@@ -1,5 +1,5 @@
-from typing import AsyncGenerator
 from contextlib import asynccontextmanager
+from typing import AsyncGenerator
 
 from redis.asyncio import ConnectionPool, Redis
 
@@ -10,16 +10,16 @@ class RedisHelper:
     def __init__(self) -> None:
         self.url = settings.redis.redis_url
         self._pool: ConnectionPool = self._init_pool()
-        
-        
+
+
     def _init_pool(self) -> ConnectionPool:
         return ConnectionPool.from_url(
             url=self.url,
             encoding='utf-8',
             decode_responses=True
         )
-        
-        
+
+
     @asynccontextmanager
     async def client_getter(self) -> AsyncGenerator:
         redis_client = Redis(connection_pool=self._pool)
@@ -27,4 +27,4 @@ class RedisHelper:
             yield redis_client # передает управление наружу позволяя использовать Redis внутри блока async with После выхода будет finally
         finally:
             await redis_client.aclose()
-    
+

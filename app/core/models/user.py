@@ -1,6 +1,6 @@
 from typing import List
 
-from sqlalchemy import String, Boolean, Text
+from sqlalchemy import Boolean, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
@@ -35,6 +35,6 @@ class User(IDMixin, TimeStampMixin, Base):
         default=False,
         nullable=False,
     )
-    
-    
-    
+
+
+

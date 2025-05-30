@@ -1,4 +1,4 @@
-from fastapi import HTTPException, status, Request
+from fastapi import HTTPException, Request, status
 
 
 async def get_token_from_cookies(request: Request) -> str:
