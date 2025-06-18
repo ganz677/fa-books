@@ -1,14 +1,14 @@
 import uuid
 
-from pydantic import BaseModel
 from fastapi import Form
+from pydantic import BaseModel
 
 
 class AudioCreate(BaseModel):
     title: str
     description: str
     author: str
-    
+
     @classmethod
     def as_form(
         cls,
@@ -17,9 +17,9 @@ class AudioCreate(BaseModel):
         author: str = Form(...),
     ):
         return cls(title=title, description=description, author=author)
-    
-    
-    
+
+
+
 class AudioRead(BaseModel):
     id: int
     title: str
@@ -27,10 +27,10 @@ class AudioRead(BaseModel):
     author: str
     filename: str
     uploader_id: uuid.UUID
-    
+
     class Config:
         from_attributes = True
-    
-    
 
-    
+
+
+

@@ -1,13 +1,9 @@
 from typing import List
 
-
-from sqlalchemy import Table, ForeignKey, Integer, Column 
+from sqlalchemy import Column, ForeignKey, Integer, Table
 from sqlalchemy.dialects.postgresql import UUID
 
-
 from .base import Base
-
-
 
 playlist_audio_association = Table(
     'playlist_audio_association',

@@ -1,10 +1,10 @@
 from typing import Annotated, List
 
-from fastapi import APIRouter, Depends, File, UploadFile, Form, HTTPException, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
 
-from .schemas import AudioRead, AudioCreate
-from .services import AudioServices
 from ..depends import get_current_user
+from .schemas import AudioCreate, AudioRead
+from .services import AudioServices
 
 router = APIRouter(
     prefix='/audio',
@@ -35,7 +35,3 @@ async def all_songs_by_current_user(
     user_token = Depends(get_current_user),
 ):
     return await service.get_songs(user_id=user_token.id)
-
-
-
-
