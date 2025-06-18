@@ -8,6 +8,8 @@ BASE_DIR =Path(__file__).parent.parent
 
 load_dotenv()
 
+class AudioSettings(BaseModel):
+    audios_dir: Path = BASE_DIR / 'media'
 
 class FrontSettings(BaseModel):
     url: str
@@ -57,5 +59,6 @@ class Settings(BaseSettings):
     redis: RedisSettings
     front: FrontSettings
     auth_jwt: AuthJWT = AuthJWT()
+    audio_settings: AudioSettings = AudioSettings()
 
 settings = Settings()

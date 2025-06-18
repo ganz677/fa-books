@@ -42,7 +42,7 @@ async def confirm_registration(
     status_code=status.HTTP_200_OK,
 )
 async def login(
-    user: AuthUser,
+    user: Annotated[AuthUser, Depends(AuthUser.as_form)],
     service: UserService = Depends(UserService),
 ) -> JSONResponse:
     return await service.login_user(user=user)

@@ -15,3 +15,5 @@ def camel_to_snake_case(tablename: str) -> str:
         chars.append(char)
 
     return "".join(chars)
+
+

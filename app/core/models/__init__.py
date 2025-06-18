@@ -1,15 +1,15 @@
-from .author import Author
-from .author_book_association import book_author_association_table
 from .base import Base
-from .book import Book
 from .user import User
+from .audio import Audio
+from .playlist import Playlist
+from .playlist_audio_association import playlist_audio_association
 from .db_helper import db_helper
 
 __all__ = (
     "Base",
-    "Book",
-    "Author",
     "User",
-    "book_author_association_table",
+    "Audio",
+    "Playlist",
+    "playlist_audio_association",
     "db_helper",
 )

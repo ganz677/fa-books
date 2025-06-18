@@ -1,6 +1,7 @@
 import datetime
 import uuid
 
+from fastapi import Form
 from pydantic import BaseModel, EmailStr
 
 
@@ -14,10 +15,6 @@ class GetUserByEmail(BaseModel):
 
 class UserVerifySchema(GetUserByID, GetUserByEmail):
     session_id: uuid.UUID | str | None = None
-
-
-class AuthUser(GetUserByEmail):
-    password: str
 
 
 class CreateUser(GetUserByEmail):
@@ -34,3 +31,13 @@ class UserReturnData(GetUserByID, GetUserByEmail):
     is_superuser: bool
     created_at: datetime.datetime
     updated_at: datetime.datetime
+
+
+class AuthUser(BaseModel):
+    email: EmailStr
+    password: str
+    
+    @classmethod
+    def as_form(cls, email: EmailStr = Form(...), password: str = Form(...)):
+        return cls(email=email, password=password)
+        

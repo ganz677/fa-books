@@ -126,8 +126,11 @@ dependencies = [
     "watchfiles (==1.0.5)",
     "websockets (==15.0.1)",
     "celery (>=5.5.2,<6.0.0)",
-    "itsdangerous (>=2.2.0,<3.0.0)",
     "redis (>=6.1.0,<7.0.0)",
+    "itsdangerous (>=2.2.0,<3.0.0)",
+    "aiohttp (>=3.12.6,<4.0.0)",
+    "apscheduler (>=3.11.0,<4.0.0)",
+    "bs4 (>=0.0.2,<0.0.3)",
 ]
 
 
